@@ -34,6 +34,13 @@ which is described in its own section lower down.
 
 .. code-block:: bash
 
+    # If you don't specify any specific actions, the `exec` script defaults to
+    # `print(master)`:
+    $ iphoto exec
+    The Badlands / DSC_0240
+    ... snip ...
+    Unnamed event (10/30/2014) / 20141030_150848
+
     # List photos with timestamps that differ from master (this is a dry-run
     # operation, since --commit is not specified)
     $ iphoto exec --reset-time

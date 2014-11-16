@@ -41,24 +41,30 @@ which is described in its own section lower down.
     ... snip ...
     Unnamed event (10/30/2014) / 20141030_150848
 
-    # List photos with timestamps that differ from master (this is a dry-run
-    # operation, since --commit is not specified)
+    # Unless you specify the `--commit` flag, everything is executed in
+    # "dry-run" mode. For instance, this lists the photos that would be
+    # modified by the `--reset-time` action:
     $ iphoto exec --reset-time
 
-    # Reset photos in the Mayhem album to master time
+    # Different filters are available for constraining which photos `exec`
+    # applies to. For instance, this resets the v1 time to match the master
+    # time for photos in the Mayhem album:
     $ iphoto exec --album='Mayhem' --reset-time --commit
 
-    # Subtract an hour from flagged photos in the Mayhem album
+    # This subtracts an hour from flagged photos in the Mayhem album:
     $ iphoto exec --album='Mayhem' --flagged --offset-time='-3600' --commit
 
-    # Unflag all photos from events containing photos from 10/14/2014
+    # You can specify a generic python script which executes in the context of
+    # a single photo. For instance, this unflags everything from events
+    # containing photos from 10/14/2014:
     $ iphoto exec --event='2014-10-14' --commit 'v1.isFlagged = 0'
 
-    # Print the name and image path for every photo from the event of 10/14/2014
+    # This prints the name and image path for every photo from the event of
+    # 10/14/2014:
     $ iphoto exec --event '2014-10-14' \
            'print("%s\t%s" % (master.name, master.imagePath))'
 
-    # Print the file sizes of all flagged photos
+    # This prints the file sizes of all flagged photos:
     $ iphoto exec --flagged 'print(master.fileSize)'
 
 Object model

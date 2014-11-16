@@ -63,3 +63,6 @@ In fact, it actually keeps three copies--the master, v0, and v1 records, and
 all of them are created on import. The properties you see in the UI all come
 from the v1 record. I recommend that you stick to the same approach: edit v1,
 and, if necessary, revert it by copying properties from v0 or from master.
+
+When you export photos out of iPhoto, the properties from v1 are automatically
+applied to the exported photos.

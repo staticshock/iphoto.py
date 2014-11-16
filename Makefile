@@ -10,6 +10,7 @@ bdist_wheel:
 
 .PHONY: publish
 publish: sdist bdist_wheel
+	@[[ -f ~/.pypirc ]] || python setup.py register
 	@twine upload dist/*
 
 .PHONY: clean

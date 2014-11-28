@@ -19,17 +19,17 @@ Installation
 Command line usage
 ------------------
 
-**Warning:** `exec` is a dangerous, potentially destructive command that directly
+**Warning:** ``exec`` is a dangerous, potentially destructive command that directly
 operates on your iPhoto database. Backup your library before proceeding.
 
-**Warning:** If you run `exec` and concurrently make changes via iPhoto, the
+**Warning:** If you run ``exec`` and concurrently make changes via iPhoto, the
 results are not predictable. The least you can expect is some lag between an
 action in iPhoto and an observable change on the command line, but also be
 aware of the potential for data loss, since the application could operate from
 a stale cache of recent changes. *iPhoto has no reasonable expectation that
 other applications are using its database.*
 
-The `exec` command relies on some knowledge of the iPhoto object model,
+The ``exec`` command relies on some knowledge of the iPhoto object model,
 which is described in its own section below.
 
 .. code-block:: bash
@@ -87,7 +87,7 @@ There are three types of album records:
 
 1. **Events:** exactly what you'd think if you've used the UI. Each photo is
    associated with exactly one event album, which is referenced by master and
-   version records via `projectUuid`.
+   version records via ``projectUuid``.
 2. **Smart albums:** custom-made albums with dynamic, query-defined contents.
    The query is hidden away inside of a keyed archive, which is itself stored
    in the album's binary plist file. *This album type is currently unsupported

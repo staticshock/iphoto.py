@@ -294,6 +294,8 @@ class IPhotoLibrary(object):
             return query.all()
 
     def uuid_query(self, table_cls, uuids):
+        if isinstance(uuids, str):
+            uuids = [uuids]
         return self.db_session.query(table_cls).filter(table_cls.uuid.in_(uuids))
 
     def master_query(self, filter_by=None):

@@ -16,6 +16,7 @@ default_iphoto_root = os.path.expanduser("~/Pictures/iPhoto Library.photolibrary
     "--root", default=default_iphoto_root, envvar="IPHOTO_ROOT",
     type=click.Path(exists=True, file_okay=False))
 @click.option("--show-queries", is_flag=True, help="Show raw SQL queries.")
+@click.version_option()
 @click.pass_context
 def cli(ctx, root, show_queries):
     lib = ctx.obj['lib'] = IPhotoLibrary(root)

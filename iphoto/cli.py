@@ -60,7 +60,7 @@ def exec_(ctx, album_name, event_date, flagged_only, reset_time, offset_time, sh
 
     for ver in iter_versions(lib, album_name, event_date, flagged_only):
         exec_locals = {
-            'v0': next(v0 for v0 in ver.master.version_collection if v0.versionNumber == 0),
+            'v0': next(v0 for v0 in ver.master.versions if v0.versionNumber == 0),
             'v1': ver,
             'master': ver.master,
             'date': datetime.date,

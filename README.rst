@@ -30,7 +30,7 @@ a stale cache of recent changes. *iPhoto has no reasonable expectation that
 other applications are using its database.*
 
 The `exec` command relies on some knowledge of the iPhoto object model,
-which is described in its own section lower down.
+which is described in its own section below.
 
 .. code-block:: bash
 
@@ -79,3 +79,29 @@ and, if necessary, revert it by copying properties from v0 or from master.
 
 When you export photos out of iPhoto, the properties from v1 are automatically
 applied to the exported photos.
+
+Album types
+~~~~~~~~~~~
+
+There are three types of album records:
+
+1. **Events:** exactly what you'd think if you've used the UI. Each photo is
+   associated with exactly one event album, which is referenced by master and
+   version records via `projectUuid`.
+2. **Smart albums:** custom-made albums with dynamic, query-defined contents.
+   The query is hidden away inside of a keyed archive, which is itself stored
+   in the album's binary plist file. *This album type is currently unsupported
+   by iphoto.py because I haven't found or written a parser for the keyed
+   archive format. It's technically similar to bplist parser, but more
+   complicated.*
+3. **Regular albums:** custom-made albums with a static, user-curated image
+   list. The v1 uuids of the included images are listed in the album's binary
+   plist file.
+
+See also
+~~~~~~~~
+
+* `Properties of album records <doc/album.rst>`_.
+* `Properties of folder records <doc/folder.rst>`_.
+* `Properties of master records <doc/master.rst>`_.
+* `Properties of version records <doc/version.rst>`_.

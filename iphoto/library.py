@@ -131,6 +131,36 @@ Master.__repr__ = lambda self: "{r.folder.album} / {r.name}".format(r=self)
 Version.__repr__ = lambda self: "{r.folder.album} / {r.name} / v{r.versionNumber}".format(r=self)
 
 
+# Override some default relationship names.
+# Format: (local_table_class, local_column_name, one_to_many_name, many_to_one_name)
+_rel_names = (
+    (Master, "originalVersionUuid", "originalVersion", None),
+    (Folder, "parentFolderUuid", "parentFolder", "childFolders"),
+)
+
+
+def name_for_scalar_relationship(base, local_cls, referred_cls, constraint):
+    local_col = constraint.columns[0]
+    #referred_col = list(local_col.foreign_keys)[0].column
+    #print("%s.%s -> %s.%s" % (local_col.table.key, local_col.key, referred_col.table.key, referred_col.key))
+    for tbl_cls, col_name, one_to_many_name, _ in _rel_names:
+        if (tbl_cls, col_name) == (local_cls, local_col.key):
+            return one_to_many_name
+    else:
+        name = referred_cls.__name__
+        return name[0].lower() + name[1:]
+
+
+def name_for_collection_relationship(base, local_cls, referred_cls, constraint):
+    local_col = constraint.columns[0]
+    for tbl_cls, col_name, _, many_to_one_name in _rel_names:
+        if (tbl_cls, col_name) == (local_cls, local_col.key) and many_to_one_name:
+            return many_to_one_name
+    else:
+        name = referred_cls.__name__
+        return name[0].lower() + name[1:] + "s"
+
+
 def accumulate_db_changes(session, accumulator):
     """Keep track of flushed changes in accumulator"""
     @event.listens_for(session, 'before_flush')
@@ -153,7 +183,13 @@ class IPhotoLibrary(object):
         self.paths = IPhotoPaths(root)
         self.db_engine = create_engine("sqlite:///" + self.paths.library_db_path)
         # This makes all table-based entities available via Base.classes.*
-        Base.prepare(self.db_engine, reflect=True, classname_for_table=table_name_to_class_name)
+        Base.prepare(
+            self.db_engine,
+            reflect=True,
+            classname_for_table=table_name_to_class_name,
+            name_for_scalar_relationship=name_for_scalar_relationship,
+            name_for_collection_relationship=name_for_collection_relationship
+        )
         self.db_session = Session(self.db_engine)
         self._attr_changes = []
         accumulate_db_changes(self.db_session, self._attr_changes)
@@ -177,9 +213,9 @@ class IPhotoLibrary(object):
         # Pre-fetch folder, masters, and versions
         query = query.options(
             joinedload(Album.folder)
-                .joinedload(Folder.version_collection)
+                .joinedload(Folder.versions)
                 .joinedload(Version.master)
-                .joinedload(Master.version_collection))
+                .joinedload(Master.versions))
 
         if album_name is not None:
             query = query.filter(Album.name == album_name)
@@ -241,7 +277,7 @@ class IPhotoLibrary(object):
         """Returns Version records in album."""
         if is_event(album):
             # Events: the photo list is stored in SQLite.
-            return (ver for ver in album.folder.version_collection if ver.versionNumber == 1)
+            return (ver for ver in album.folder.versions if ver.versionNumber == 1)
         elif is_smart_album(album):
             # Smart albums: the photo list generated dynamically from a
             # query stored in the album's plist under the key 'UserQueryInfo'.

@@ -235,7 +235,8 @@ class IPhotoLibrary(object):
             combined_filter_by['albumSubclass'] = 1
 
         combined_filter_by.update(filter_by or {})
-        query = query.filter_by(**combined_filter_by)
+        for col, value in combined_filter_by.items():
+            query = query.filter(getattr(Album, col) == value)
 
         return query.filter(
             Album.folderUuid != 'LibraryFolder',

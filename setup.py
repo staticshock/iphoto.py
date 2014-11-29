@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='iphoto',
-    version='0.2.1',
+    version='0.2.2',
     description='Command line interface to iPhoto',
     long_description=open("README.rst").read(),
     author='Anton Backer',
